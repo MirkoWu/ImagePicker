@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <external-path name="ivp_camera_photos" path="."/>
+
+    <!-- 冲突的fileprovider 路径写这里-->
+    <!--<external-path name="xxxx" path="."/>-->
+</resources>

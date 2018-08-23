@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImagePickerRecyclerView">
+        <attr name="ivp_maxNum" format="integer"></attr>
+        <attr name="ivp_columnNum" format="integer"></attr>
+        <attr name="ivp_addImage" format="reference" ></attr>
+        <attr name="ivp_deleteImage" format="reference" ></attr>
+        <attr name="ivp_showDelete" format="boolean"></attr>
+    </declare-styleable>
+</resources>

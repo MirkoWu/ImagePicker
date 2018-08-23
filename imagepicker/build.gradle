@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+ext.supportLibVersion = '27.1.1'
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    compileOnly "com.android.support:support-v4:${supportLibVersion}"
+    compileOnly "com.android.support:appcompat-v7:${supportLibVersion}"
+    compileOnly "com.android.support:recyclerview-v7:${supportLibVersion}"
+
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
+    implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+}
+
+publish {
+    userOrg = 'mirkowu'
+    groupId = 'com.mirkowu.imagepicker'
+    artifactId = 'imagepicker'
+    publishVersion = '2.0.1'
+    desc = 'a library of pick image '
+    website = "https://github.com/mirkowu/${rootProject.name}"
+}
