@@ -160,7 +160,7 @@ class CustomerActivity extends Activity implements MultiImageSelectorFragment.Ca
 ### 更新日志
 * 2018-5-24
     1. 更新Glide到4.7.1
-    2. 升级Gilde到4.4
+    2. 升级Gradle到4.4
 * 2017-10-27
     1. 升级Gradle 3.0
     2. 修改上传方式
