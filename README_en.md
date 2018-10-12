@@ -2,7 +2,7 @@
 Image selector for Android device. Support single choice and multi-choice.
 
 
-[中文文档](README_zh.md)
+[中文文档](README.md)
 
 
 -------------------

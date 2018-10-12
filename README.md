@@ -2,7 +2,7 @@
 仿微信实现多图选择。支持单选和多选两种模式
 
 
-[English Doc](README.md)
+[English Doc](README_en.md)
 
 
 -------------------
