@@ -13,7 +13,7 @@ Add module `ImagePicker` as your dependence. in your `build.gradle` :
 ```java
 
 dependencies {
-   compile 'com.mirkowu.imagepicker:imagepicker:2.0.0'
+   compile 'com.mirkowu:imagepicker:0.0.7'
 }
 ```
 

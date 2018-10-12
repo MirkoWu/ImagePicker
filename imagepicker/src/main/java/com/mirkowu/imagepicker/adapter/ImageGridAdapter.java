@@ -3,6 +3,7 @@ package com.mirkowu.imagepicker.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +38,13 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.View
 
     final int mGridWidth;
 
-    public ImageGridAdapter(Context context, boolean showCamera, int column) {
+    public ImageGridAdapter(Context context, boolean showCamera, int spanCount) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.showCamera = showCamera;
         int width = ScreenUtils.getScreenWidth(context);
-        mGridWidth = (int) (width * 1f / column);
+        //int spacing = context.getResources().getDimensionPixelSize(R.dimen.ivp_space_size);
+        mGridWidth = (int) (width * 1f / spanCount);//取整
     }
 
     /**
@@ -213,6 +215,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.View
 
         void bindData(final MediaBean data) {
             if (data == null) return;
+
             // 处理单选和多选状态
             //  if (showSelectIndicator) {
             // ivSelect.setVisibility(View.VISIBLE);

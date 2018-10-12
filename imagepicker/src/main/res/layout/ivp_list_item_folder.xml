@@ -14,7 +14,7 @@
         android:id="@+id/cover"
         tools:src="@drawable/ivp_btn_back"
         android:layout_gravity="center_vertical"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:src="@drawable/ivp_default_error"
         android:layout_width="@dimen/ivp_folder_cover_size"
         android:layout_height="@dimen/ivp_folder_cover_size" />

@@ -40,6 +40,18 @@ public class Glide4Loader implements ImageEngine {
                 .into(image);
     }
 
+    @Override
+    public void loadPicked(Context context, ImageView image, String url, int width, int height) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(R.drawable.ivp_default_image)
+                        .error(R.drawable.ivp_default_error)
+                       // .override(width, height)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .into(image);
+    }
+
 
     @Override
     public void pause(Context context) {

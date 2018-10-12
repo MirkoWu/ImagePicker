@@ -33,6 +33,17 @@ public interface ImageEngine {
     void loadThumbnail(Context context, ImageView image, String url, int width);
 
     /**
+     * 加载 已经挑选的图片 ImagePickerRecyclerView内的显示 一般和 load 相似
+     *
+     * @param context
+     * @param image
+     * @param url
+     * @param width
+     * @param height
+     */
+    void loadPicked(Context context, ImageView image, String url, int width, int height);
+
+    /**
      * 停止加载
      *
      * @param context

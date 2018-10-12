@@ -2,23 +2,22 @@ package com.mirkowu.imagepicker.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.R;
+import com.mirkowu.imagepicker.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +28,35 @@ import java.util.List;
 
 public class ImagePickerRecyclerView extends RecyclerView {
     private static final String TAG = "ImagePickerRecyclerView";
-    int maxNum = 9;
-    int mGridWidth;
-    int columnNum;
-    boolean showDelete;
-    Drawable add;
-    Drawable del;
-    ImagePickedAdapter adapter;
+    private int mMaxCount = 9;
+    private int mGridWidth;
+    private int mSpanCount;
+    private int mSpacing;//间隔
+    private boolean mShowDelete;
+    private boolean mShowAddImage;
+    private Drawable mAddImageSrc;
+    private Drawable mDeleteImageSrc;
+    private ImagePickedAdapter mAdapter;
+    private MediaGridDivider gridDivider;
+    private ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
+
+    public static final int ITEM_SHAPE_SQUARE = 0;//正方形
+    public static final int ITEM_SHAPE_SIZE = 1;//指定宽高
+    private int mItemShape;
+    private int mItemWidth;
+    private int mItemHeight;
+    private FrameLayout.LayoutParams mItemLayoutParams;
+
+    private static final ImageView.ScaleType[] sScaleTypeArray = new ImageView.ScaleType[]{
+            ImageView.ScaleType.MATRIX,
+            ImageView.ScaleType.FIT_XY,
+            ImageView.ScaleType.FIT_START,
+            ImageView.ScaleType.FIT_CENTER,
+            ImageView.ScaleType.FIT_END,
+            ImageView.ScaleType.CENTER,
+            ImageView.ScaleType.CENTER_CROP,
+            ImageView.ScaleType.CENTER_INSIDE
+    };
 
     public ImagePickerRecyclerView(Context context) {
         this(context, null);
@@ -48,38 +69,51 @@ public class ImagePickerRecyclerView extends RecyclerView {
     public ImagePickerRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImagePickerRecyclerView, defStyle, 0);
-        maxNum = a.getInteger(R.styleable.ImagePickerRecyclerView_ivp_maxNum, 9);
-        columnNum = a.getInteger(R.styleable.ImagePickerRecyclerView_ivp_columnNum, 4);
-        add = a.getDrawable(R.styleable.ImagePickerRecyclerView_ivp_addImage);
-        del = a.getDrawable(R.styleable.ImagePickerRecyclerView_ivp_deleteImage);
-        showDelete = a.getBoolean(R.styleable.ImagePickerRecyclerView_ivp_showDelete, false);
-        if (add == null) {
-            add = ContextCompat.getDrawable(context, R.drawable.ivp_addimage);
-        }
-        if (del == null) {
-            del = ContextCompat.getDrawable(context, R.drawable.ivp_delete);
+        mMaxCount = a.getInteger(R.styleable.ImagePickerRecyclerView_ivp_maxCount, 9);
+        mSpanCount = a.getInteger(R.styleable.ImagePickerRecyclerView_ivp_spanCount, 4);
+        mSpacing = a.getDimensionPixelSize(R.styleable.ImagePickerRecyclerView_ivp_spacing, ScreenUtils.dip2px(context, 2));
+        mAddImageSrc = a.getDrawable(R.styleable.ImagePickerRecyclerView_ivp_addImageSrc);
+        mDeleteImageSrc = a.getDrawable(R.styleable.ImagePickerRecyclerView_ivp_deleteImageSrc);
+        mShowDelete = a.getBoolean(R.styleable.ImagePickerRecyclerView_ivp_showDelete, true);
+        mShowAddImage = a.getBoolean(R.styleable.ImagePickerRecyclerView_ivp_showAddImage, true);
+        final int index = a.getInteger(R.styleable.ImagePickerRecyclerView_ivp_imageScaleType, 6);
+        mItemShape = a.getInteger(R.styleable.ImagePickerRecyclerView_ivp_itemShape, ITEM_SHAPE_SQUARE);
+        a.recycle();
+
+        if (index >= 0) {
+            mScaleType = (sScaleTypeArray[index]);
         }
 
-        a.recycle();
+        if (mShowAddImage && mAddImageSrc == null) {
+            mAddImageSrc = ContextCompat.getDrawable(context, R.drawable.ivp_addimage);
+        }
+        if (mShowDelete && mDeleteImageSrc == null) {
+            mDeleteImageSrc = ContextCompat.getDrawable(context, R.drawable.ivp_delete);
+        }
+
 
         init(context);
     }
 
     private void init(Context context) {
-        WindowManager wm = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        int width = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Point size = new Point();
-            wm.getDefaultDisplay().getSize(size);
-            width = size.x;
-        } else {
-            width = wm.getDefaultDisplay().getWidth();
+        int width = ScreenUtils.getScreenWidth(getContext());
+        mGridWidth = (int) (width * 1f / mSpanCount);
+
+        if (mItemShape == ITEM_SHAPE_SQUARE) {
+            mItemLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else if (mItemShape == ITEM_SHAPE_SIZE) {
+            setItemShape(mItemShape, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-        mGridWidth = width / columnNum;
-        Log.d("mGridWidth=", mGridWidth + "");
-        setLayoutManager(new StaggeredGridLayoutManager(columnNum, StaggeredGridLayoutManager.VERTICAL));
-        adapter = new ImagePickedAdapter(context);
-        setAdapter(adapter);
+
+        setLayoutManager(new GridLayoutManager(getContext(), mSpanCount));
+        if (gridDivider != null) removeItemDecoration(gridDivider);
+        gridDivider = new MediaGridDivider(mSpanCount, mSpacing, false);
+        addItemDecoration(gridDivider);
+
+        mAdapter = new ImagePickedAdapter(context);
+        setAdapter(mAdapter);
+
+        // setItemShape(mItemShape);
     }
 
     /**
@@ -88,34 +122,96 @@ public class ImagePickerRecyclerView extends RecyclerView {
      * @param data
      */
     public void setData(List<String> data) {
-        adapter.setData(data);
+        mAdapter.setData(data);
     }
 
     /**
      * 是否显示删除按钮
      *
-     * @param showDelete
+     * @param mShowDelete
      */
-    public void setShowDelete(boolean showDelete) {
-        this.showDelete = showDelete;
-        this.adapter.notifyDataSetChanged();
+    public void setShowDelete(boolean mShowDelete) {
+        if (this.mShowDelete == mShowDelete) return;
+
+        this.mShowDelete = mShowDelete;
+        notifyDataSetChanged();
     }
 
     /***
      * 设置列
-     * @param columnNum
+     * @param mSpanCount
      */
-    public void setColumnNum(int columnNum) {
-        this.columnNum = columnNum;
+    public void setSpanCount(int mSpanCount) {
+        if (this.mSpanCount == mSpanCount) return;
+
+        this.mSpanCount = mSpanCount;
+        setLayoutManager(new GridLayoutManager(getContext(), mSpanCount));
+        if (gridDivider != null) removeItemDecoration(gridDivider);
+        gridDivider = new MediaGridDivider(mSpanCount, mSpacing, false);
+        addItemDecoration(gridDivider);
+
+        int width = ScreenUtils.getScreenWidth(getContext());
+        mGridWidth = (int) (width * 1f / mSpanCount);
+
+        notifyDataSetChanged();
+
+
+    }
+
+    /**
+     * 设置Item 的宽高
+     *
+     * @param mItemShape
+     */
+    public void setItemShape(int mItemShape) {
+        if (this.mItemShape == mItemShape) return;
+        this.mItemShape = mItemShape;
+        if (mItemShape == ITEM_SHAPE_SQUARE) {
+            mItemLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else if (mItemShape == ITEM_SHAPE_SIZE) {
+            setItemShape(mItemShape, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+    }
+
+    /**
+     * @param mItemShape
+     * @param mItemWidth
+     * @param mItemHeight
+     */
+    public void setItemShape(int mItemShape, int mItemWidth, int mItemHeight) {
+        this.mItemShape = mItemShape;
+        this.mItemWidth = mItemWidth;
+        this.mItemHeight = mItemHeight;
+        mItemLayoutParams = new FrameLayout.LayoutParams(mItemWidth, mItemHeight);
+    }
+
+    /**
+     *
+     */
+    public void notifyDataSetChanged() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
      * 设置最大数量
      *
-     * @param maxNum
+     * @param mMaxCount
      */
-    public void setMaxNum(int maxNum) {
-        this.maxNum = maxNum;
+    public void setMaxCount(int mMaxCount) {
+        if (this.mMaxCount == mMaxCount) return;
+
+        this.mMaxCount = mMaxCount;
+        notifyDataSetChanged();
+    }
+
+    public void setImageScaleType(ImageView.ScaleType mScaleType) {
+        if (this.mScaleType == mScaleType) return;
+
+        this.mScaleType = mScaleType;
+        notifyDataSetChanged();
     }
 
     /**
@@ -123,8 +219,9 @@ public class ImagePickerRecyclerView extends RecyclerView {
      *
      * @param addImageRes
      */
-    public void setAddImage(int addImageRes) {
-        this.add = getResources().getDrawable(addImageRes);
+    public void setAddImageSrc(@DrawableRes int addImageRes) {
+        this.mAddImageSrc = getResources().getDrawable(addImageRes);
+        notifyDataSetChanged();
     }
 
     /**
@@ -132,13 +229,14 @@ public class ImagePickerRecyclerView extends RecyclerView {
      *
      * @param delImageRes
      */
-    public void setDeleteImage(int delImageRes) {
-        this.del = getResources().getDrawable(delImageRes);
+    public void setDeleteImageSrc(@DrawableRes int delImageRes) {
+        this.mDeleteImageSrc = getResources().getDrawable(delImageRes);
+        notifyDataSetChanged();
     }
 
 
     public ImagePickedAdapter getAdapter() {
-        return adapter;
+        return mAdapter;
     }
 
 
@@ -174,12 +272,12 @@ public class ImagePickerRecyclerView extends RecyclerView {
 
         @Override
         public int getItemCount() {
-            return Math.min(mData.size() + 1, maxNum);
+            return Math.min(mData.size() + (mShowAddImage ? 1 : 0), mMaxCount);
         }
 
         @Override
         public int getItemViewType(int position) {
-            if ((position) == mData.size() && mData.size() < maxNum) {
+            if (mShowAddImage && (position) == mData.size() && mData.size() < mMaxCount) {
                 return 0;
             } else {
                 return R.layout.ivp_list_item_image;
@@ -194,15 +292,14 @@ public class ImagePickerRecyclerView extends RecyclerView {
 
         @Override
         public void onBindViewHolder(ImgViewHolder holder, final int position) {
-            if (getItemViewType(position) == 0) {//// 最后一项显示一个＋按钮
-                holder.ivThumb.setImageDrawable(add);
-            } else {
-                ImagePicker.getInstance().getImageEngine().loadThumbnail(context, holder.ivThumb, mData.get(position), mGridWidth);
-            }
-            holder.ivSelect.setVisibility(showDelete ? VISIBLE : GONE);
-            if (showDelete && getItemViewType(position) != 0) {
+            holder.ivThumb.setSquare(mItemShape == ITEM_SHAPE_SQUARE);
+            holder.itemView.setLayoutParams(mItemLayoutParams);
+            holder.ivThumb.setScaleType(mScaleType);
+
+            holder.ivSelect.setVisibility(mShowDelete ? VISIBLE : GONE);
+            if (mShowDelete && getItemViewType(position) != 0) {
                 holder.ivSelect.setVisibility(VISIBLE);
-                holder.ivSelect.setImageDrawable(del);
+                holder.ivSelect.setImageDrawable(mDeleteImageSrc);
             } else holder.ivSelect.setVisibility(GONE);
 
             //点击事件 交给外界处理
@@ -221,18 +318,24 @@ public class ImagePickerRecyclerView extends RecyclerView {
                 });
             }
 
+            if (mShowAddImage && getItemViewType(position) == 0) {//// 最后一项显示一个＋按钮
+                holder.ivThumb.setImageDrawable(mAddImageSrc);
+            } else {
+                ImagePicker.getInstance().getImageEngine().loadPicked(context, holder.ivThumb, mData.get(position), mGridWidth, mGridWidth);
+            }
 
         }
 
 
         public class ImgViewHolder extends RecyclerView.ViewHolder {
-            ImageView ivThumb;
+            SquaredImageView ivThumb;
             ImageView ivSelect;
 
             public ImgViewHolder(View itemView) {
                 super(itemView);
                 ivThumb = itemView.findViewById(R.id.ivThumb);
                 ivSelect = itemView.findViewById(R.id.ivSelect);
+                ivThumb.setAdjustViewBounds(true);
             }
         }
 

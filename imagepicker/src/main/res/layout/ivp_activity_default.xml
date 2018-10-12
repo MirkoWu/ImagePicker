@@ -23,6 +23,7 @@
             android:minHeight="1dp"
             android:minWidth="1dp"
             android:paddingBottom="5dp"
+            android:textAllCaps="false"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"

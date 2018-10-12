@@ -35,6 +35,7 @@
         android:minWidth="1dp"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
+        android:textAllCaps="false"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:text="完成"

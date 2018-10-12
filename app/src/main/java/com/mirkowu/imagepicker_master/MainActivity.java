@@ -6,6 +6,8 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.view.ImagePickerRecyclerView;
@@ -37,16 +39,25 @@ public class MainActivity extends AppCompatActivity implements ImagePickerRecycl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn0:
-                 selector.showCameraAction(this);
-                return;
+                // selector.showCameraAction(this);
+              //  mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_FIT);
+                mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_SIZE,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                mRecyclerView.setImageScaleType(ImageView.ScaleType.FIT_XY);
+                mRecyclerView.setSpanCount(1);
+
+                break;
             case R.id.btn1:
-                selector.single().showCamera(true);
+                // selector.single().showCamera(true).start(this);
+
+                mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_SQUARE);
+                mRecyclerView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                mRecyclerView.setSpanCount(2);
+
                 break;
             case R.id.btn2:
-                selector.maxCount(9).showCamera(true);
+                selector.maxCount(9).showCamera(true).start(this);
                 break;
         }
-        selector.start(this);
     }
 
 

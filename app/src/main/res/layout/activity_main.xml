@@ -47,7 +47,10 @@
         android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:ivp_addImage="@mipmap/ic_launcher"
+        app:ivp_imageScaleType="fitXY"
+        app:ivp_itemShape="size"
+        app:ivp_addImageSrc="@mipmap/ic_launcher"
+        app:ivp_spanCount="1"
         app:ivp_showDelete="true" />
 
     <TextView
