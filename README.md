@@ -100,8 +100,7 @@ Receive result in your `onActivityResult` Method. eg.
 No more steps, just enjoy. :)
 
 -------------------
-```
-###Custom Activity Style
+### Custom Activity Style
 *Use the func can save image in previewActivity
 ```java
   public static void previewImageWithSave(Context context, String savePath, ArrayList<String> originData, int currentPos) {
