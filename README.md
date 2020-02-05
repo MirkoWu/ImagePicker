@@ -202,7 +202,7 @@ public class Glide4Loader implements ImageEngine {
 -------------------
 
 ### 更新日志
-* 2018-5-24
+* 2020-2-5
     1. 修复因传送数据过大导致预览时闪退的Bug
     2. 升级到Androidx版本
     2. 升级Gradle到4.6

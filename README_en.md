@@ -200,7 +200,7 @@ public class Glide4Loader implements ImageEngine {
 -------------------
 
 ### Change Log
-* 2018-5-24
+* 2020-2-5
     1. Fixed large data cause crash bug
     2. Move to Androidx version
     3. update Gradle to 4.6
