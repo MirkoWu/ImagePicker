@@ -2,12 +2,13 @@
 
 buildscript {
     repositories {
-        jcenter()
+        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         google()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
-        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.novoda:bintray-release:0.9.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -15,9 +16,10 @@ buildscript {
 
 allprojects {
     repositories {
+        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        google()
         jcenter()
         maven { url "https://jitpack.io" }
-        google()
     }
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
@@ -29,3 +31,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+tasks.getByPath(":imagepicker:javadocRelease").enabled = false

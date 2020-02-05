@@ -13,38 +13,33 @@
 ```java
 
 dependencies {
-    compile 'com.mirkowu:imagepicker:0.0.7'
+    implementation 'com.mirkowu:ImagePicker:3.0.0'
+    
+    //glide 版本最好一致 
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
 }
 ```
 
-* 第1步 
-在你的 `AndroidManifest.xml` 中做如下声明:
-```xml
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.CAMERA"/>
-
-```
-
-* 第2步
+* 第1步
 在你的代码中简单调用(), eg.
 
 ``` java
 // Multi image selector form an Activity
-ImagePicker.create(Context)
+ImagePicker.getInstance(Context)
+        .single() // 单选模式        
+        .maxCount(9)//多选模式
         .start(Activity);
 
 //可直接调用相机
-ImagePicker.create(Context).showCameraAction(Activity/fragment)
+ImagePicker.getInstance(Context).showCameraAction(Activity/fragment)
 ```
 
 详细可使用的Api.
 ``` java
-ImagePicker.create(Context)
+ImagePicker.getInstance(Context)
         .showCamera(boolean) // 是否显示相机. 默认为显示
-        .count(int) // 最大选择图片数量, 默认为9. 只有在选择模式为多选时有效
         .single() // 单选模式
-        .multi() // 多选模式, 默认模式;
+        .maxCount(9)//多选模式 自定义最大选择数量
         .origin(ArrayList<String>) // 默认已选择图片. 只有在选择模式为多选时有效
         .start(Activity/Fragment;
         
@@ -70,21 +65,7 @@ ImagePicker.create(Context)
         
 ```
 
-同样支持老版本的 `Intent` 调用方法:
-```java
-Intent intent = new Intent(mContext, ImagePickerActivity.class);
-// 是否显示调用相机拍照
-intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, true);
-// 最大图片选择数量
-intent.putExtra(ImagePickerActivity.EXTRA_SELECT_COUNT, 9);
-// 设置模式 (支持 单选/ImagePickerActivity.MODE_SINGLE 或者 多选/ImagePickerActivity.MODE_MULTI)
-intent.putExtra(ImagePickerActivity.EXTRA_SELECT_MODE, ImagePickerActivity.MODE_MULTI);
-// 默认选择图片,回填选项(支持String ArrayList)
-intent.putStringArrayListExtra(ImagePickerActivity.EXTRA_DEFAULT_SELECTED_LIST, defaultDataArray);
-startActivityForResult(intent, REQUEST_IMAGE);
-```
-
-* 第3步
+* 第2步
 在你的 `onActivityResult` 方法中接受结果. 例如:
 ```java
 @Override
@@ -99,12 +80,12 @@ startActivityForResult(intent, REQUEST_IMAGE);
     }
 ```
 
-* 第4步
-没第4步了，就这样就OK啦~ :)
+* 第3步
+没第3步了，就这样就OK啦~ :)
 
 -------------------
 
-* 保存图片
+###  保存图片
  可以调用该方法保存图片 ，传入路径为空则不会出现保存按钮
 ```java 
     public static void previewImageWithSave(Context context, String savePath, ArrayList<String> originData, int currentPos) {
@@ -126,7 +107,7 @@ class CustomerActivity extends Activity implements MultiImageSelectorFragment.Ca
         Bundle bundle = new Bundle();
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_MODE, mode);
-        <bundle class="putBo"></bundle>olean(MultiImageSelectorFragment.EXTRA_SHOW_CAMERA, isShow);
+        bundle.putBoolean(MultiImageSelectorFragment.EXTRA_SHOW_CAMERA, isShow);
         // 添加主Fragment到Activity
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.image_grid, Fragment.instantiate(this, MultiImageSelectorFragment.class.getName(), bundle))
@@ -155,9 +136,76 @@ class CustomerActivity extends Activity implements MultiImageSelectorFragment.Ca
 ```
 * 具体可以参考`ImagePickerActivity.java`的实现
 
+* 图片默认使用Glide加载，需要自定义图片加载器的，可以根据下面这个自己从写 记得 `setImageEngine()`
+```java
+/**
+ *  默认Glide 图片加载
+ */
+public class Glide4Loader implements ImageEngine {
+
+    public void load(Context context, ImageView image, String url) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .error(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                )
+                .into(image);
+    }
+
+    public void loadThumbnail(Context context, ImageView image, String url, int width) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(com.mirkowu.imagepicker.R.drawable.ivp_default_image)
+                        .error(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .override(width, width)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .into(image);
+    }
+
+    @Override
+    public void loadPicked(Context context, ImageView image, String url, int width, int height) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(com.mirkowu.imagepicker.R.drawable.ivp_default_image)
+                        .error(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .into(image);
+    }
+
+
+    @Override
+    public void pause(Context context) {
+        // Glide.with(context).pauseRequests();
+    }
+
+    @Override
+    public void resume(Context context) {
+        // Glide.with(context).resumeRequests();
+    }
+
+
+    @Override
+    public Bitmap loadAsBitmap(Context context, String url) throws ExecutionException, InterruptedException {
+        return Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .get();
+    }
+
+
+}
+```
 -------------------
 
 ### 更新日志
+* 2018-5-24
+    1. 修复因传送数据过大导致预览时闪退的Bug
+    2. 升级到Androidx版本
+    2. 升级Gradle到4.6
 * 2018-5-24
     1. 更新Glide到4.7.1
     2. 升级Gradle到4.4

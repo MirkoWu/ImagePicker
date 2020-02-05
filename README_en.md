@@ -13,26 +13,25 @@ Add module `ImagePicker` as your dependence. in your `build.gradle` :
 ```java
 
 dependencies {
-   compile 'com.mirkowu:imagepicker:0.0.7'
+   implementation 'com.mirkowu:ImagePicker:3.0.0'
+   
+    ////glide version need same 
+   implementation 'com.github.bumptech.glide:glide:4.9.0'
 }
 ```
 
-* Step 1 
-Set your `AndroidManifest.xml` as below:
-```xml
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.CAMERA"/>
+ 
 
-```
-
-* Step 2
+* Step 1
 Call image selector simplest in your code, eg. ( From `version-1.1` )
 
 ``` java
 // Multi image selector form an Activity
-ImagePicker.create(Context)
+ImagePicker.get(Context)
+         .single() // single        
+        .maxCount(9)//mulit
         .start(Activity);
+
 //take photo  direct
 ImagePicker.create(Context).showCameraAction(Activity/fragment)
 ```
@@ -41,9 +40,8 @@ Detail Api.
 ``` java
 ImagePicker.create(Context)
         .showCamera(boolean) // show camera or not. true by default
-        .count(int) // max select image size, 9 by default. used width #.multi()
         .single() // single mode
-        .multi() // multi mode, default mode;
+        .maxCount() // multi mode, default mode; max select image size, 9 by default.
         .origin(ArrayList<String>) // original select data set, used width #.multi()
         .start(Activity/Fragment);
         
@@ -67,21 +65,7 @@ ImagePicker.create(Context)
             }
 ```
 
-Also support traditional `Intent` :
-``` java
-Intent intent = new Intent(mContext, ImagePickerActivity.class);
-// whether show camera
-intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, true);
-// max select image amount
-intent.putExtra(ImagePickerActivity.EXTRA_SELECT_COUNT, 9);
-// select mode (ImagePickerActivity.MODE_SINGLE OR ImagePickerActivity.MODE_MULTI)
-intent.putExtra(ImagePickerActivity.EXTRA_SELECT_MODE, ImagePickerActivity.MODE_MULTI);
-// default select images (support array list)
-intent.putStringArrayListExtra(ImagePickerActivity.EXTRA_DEFAULT_SELECTED_LIST, defaultDataArray);
-startActivityForResult(intent, REQUEST_IMAGE);
-```
-
-* Step 3
+* Step 2
 Receive result in your `onActivityResult` Method. eg.
 ```java
 @Override
@@ -96,7 +80,7 @@ Receive result in your `onActivityResult` Method. eg.
     }
 ```
 
-* Step 4
+* Step 2
 No more steps, just enjoy. :)
 
 -------------------
@@ -148,12 +132,78 @@ class CustomerActivity extends Activity implements ImagePickerFragment.Callback{
     }
 }
 ```
+* custom ImageEngine, then remember call `setImageEngine()`
+```java
+/**
+ *  默认Glide 图片加载
+ */
+public class Glide4Loader implements ImageEngine {
 
+    public void load(Context context, ImageView image, String url) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .error(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                )
+                .into(image);
+    }
+
+    public void loadThumbnail(Context context, ImageView image, String url, int width) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(com.mirkowu.imagepicker.R.drawable.ivp_default_image)
+                        .error(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .override(width, width)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .into(image);
+    }
+
+    @Override
+    public void loadPicked(Context context, ImageView image, String url, int width, int height) {
+        Glide.with(context).load(url)
+                .apply(RequestOptions
+                        .placeholderOf(com.mirkowu.imagepicker.R.drawable.ivp_default_image)
+                        .error(com.mirkowu.imagepicker.R.drawable.ivp_default_error)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .into(image);
+    }
+
+
+    @Override
+    public void pause(Context context) {
+        // Glide.with(context).pauseRequests();
+    }
+
+    @Override
+    public void resume(Context context) {
+        // Glide.with(context).resumeRequests();
+    }
+
+
+    @Override
+    public Bitmap loadAsBitmap(Context context, String url) throws ExecutionException, InterruptedException {
+        return Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .get();
+    }
+
+
+}
+```
 
 
 -------------------
 
 ### Change Log
+* 2018-5-24
+    1. Fixed large data cause crash bug
+    2. Move to Androidx version
+    3. update Gradle to 4.6
 * 2018-5-24
     1. update Glide to 4.7.1
     2. update Gradle to 4.4
