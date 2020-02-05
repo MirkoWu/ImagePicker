@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="单张还是多张" />
+        android:text="activity中测试 单张还是多张" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,9 +48,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:ivp_imageScaleType="fitXY"
-        app:ivp_itemShape="size"
-        app:ivp_addImageSrc="@mipmap/ic_launcher"
-        app:ivp_spanCount="1"
+        app:ivp_itemShape="square"
+        app:ivp_addImageSrc="@drawable/ivp_addimage"
+        app:ivp_spanCount="3"
         app:ivp_showDelete="true" />
 
     <TextView

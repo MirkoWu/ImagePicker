@@ -62,7 +62,7 @@
         android:id="@+id/mRecyclerView22"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:ivp_addImageSrc="@mipmap/ic_launcher"
+        app:ivp_addImageSrc="@drawable/ivp_addimage"
         app:ivp_showDelete="true" />
 
 </LinearLayout>

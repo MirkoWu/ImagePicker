@@ -1,12 +1,14 @@
 apply plugin: 'com.android.library'
+
+//这个必须放下边
 apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
     }
 
     lintOptions {
@@ -14,26 +16,27 @@ android {
     }
 }
 
-ext.supportLibVersion = '27.1.1'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compileOnly "com.android.support:support-v4:${supportLibVersion}"
-    compileOnly "com.android.support:appcompat-v7:${supportLibVersion}"
-    compileOnly "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compileOnly 'androidx.legacy:legacy-support-v4:1.0.0'
+    compileOnly 'androidx.appcompat:appcompat:1.0.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
 
-    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+
 }
 
 publish {
     userOrg = 'mirkowu'
     groupId = 'com.mirkowu'
     artifactId = 'ImagePicker'
-    publishVersion = '0.0.7'
+    publishVersion = '3.0.0'
     desc = 'a library of pick image '
     website = "https://github.com/mirkowu/${rootProject.name}"
 }

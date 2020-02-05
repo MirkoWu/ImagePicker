@@ -7,11 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +14,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.ListPopupWindow;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.R;
@@ -76,8 +77,8 @@ public class ImagePickerFragment extends Fragment {
 
     // image result data set
     private ArrayList<String> mSelectedList = new ArrayList<>();
-    // image result data set
-    private ArrayList<String> mLoadList = new ArrayList<>();
+    // image result data set 数据过大会导致传送失败使用静态变量
+    public static ArrayList<String> mLoadList = new ArrayList<>();
     // folder result data set
     private ArrayList<Folder> mResultFolder = new ArrayList<>();
 
@@ -175,12 +176,12 @@ public class ImagePickerFragment extends Fragment {
                         showCameraAction();
                     } else {
                         ImagePreviewActivity.startFromPick(ImagePickerFragment.this,
-                                mLoadList, mSelectedList,
+                                mSelectedList,
                                 position - 1, mMaxSelectCount);
                     }
                 } else {//前往预览
                     ImagePreviewActivity.startFromPick(ImagePickerFragment.this,
-                            mLoadList, mSelectedList,
+                             mSelectedList,
                             position, mMaxSelectCount);
                 }
             }

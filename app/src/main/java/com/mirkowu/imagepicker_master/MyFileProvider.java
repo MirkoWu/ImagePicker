@@ -1,6 +1,6 @@
 package com.mirkowu.imagepicker_master;
 
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
 /**
  * @author by DELL

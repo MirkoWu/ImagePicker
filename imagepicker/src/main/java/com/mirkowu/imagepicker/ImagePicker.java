@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import com.mirkowu.imagepicker.engine.Glide4Loader;
 import com.mirkowu.imagepicker.engine.ImageEngine;
 import com.mirkowu.imagepicker.ui.ImagePickerActivity;
 import com.mirkowu.imagepicker.ui.ImagePreviewActivity;
@@ -71,7 +73,9 @@ public class ImagePicker {
     }
 
     public ImageEngine getImageEngine() {
-        if (mImageEngine == null) throw new RuntimeException("请先配置ImageLoader！！！");
+        if (mImageEngine == null) {
+            mImageEngine = new Glide4Loader();
+        }
         return mImageEngine;
     }
 

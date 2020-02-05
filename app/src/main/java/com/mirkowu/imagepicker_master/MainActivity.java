@@ -3,11 +3,10 @@ package com.mirkowu.imagepicker_master;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.view.ImagePickerRecyclerView;
@@ -24,13 +23,15 @@ public class MainActivity extends AppCompatActivity implements ImagePickerRecycl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        selector = ImagePicker.getInstance().setImageEngine(new Glide4Loader());
+        selector = ImagePicker.getInstance();
+        //需要自定义图片加载器
+        //.setImageEngine(new Glide4Loader());
         mRecyclerView = (ImagePickerRecyclerView) findViewById(R.id.mRecyclerView);
         mRecyclerView.setOnImagePickEventListener(this);
 
         List<String> list = new ArrayList<>();
-        list.add("http://pic58.nipic.com/file/20150110/11284670_104043775000_2.jpg");
-        list.add("http://pic40.nipic.com/20140412/11857649_170524977000_2.jpg");
+//        list.add("http://pic58.nipic.com/file/20150110/11284670_104043775000_2.jpg");
+//        list.add("http://pic40.nipic.com/20140412/11857649_170524977000_2.jpg");
         mRecyclerView.setData(list);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new PickFragment()).commit();
@@ -39,19 +40,19 @@ public class MainActivity extends AppCompatActivity implements ImagePickerRecycl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn0:
-                // selector.showCameraAction(this);
-              //  mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_FIT);
-                mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_SIZE,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                mRecyclerView.setImageScaleType(ImageView.ScaleType.FIT_XY);
-                mRecyclerView.setSpanCount(1);
+                selector.showCameraAction(this);
+
+//                mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_SIZE,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                mRecyclerView.setImageScaleType(ImageView.ScaleType.FIT_XY);
+//                mRecyclerView.setSpanCount(1);
 
                 break;
             case R.id.btn1:
-                // selector.single().showCamera(true).start(this);
+                selector.single().showCamera(true).start(this);
 
-                mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_SQUARE);
-                mRecyclerView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
-                mRecyclerView.setSpanCount(2);
+//                mRecyclerView.setItemShape(ImagePickerRecyclerView.ITEM_SHAPE_SQUARE);
+//                mRecyclerView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+//                mRecyclerView.setSpanCount(2);
 
                 break;
             case R.id.btn2:

@@ -3,11 +3,12 @@ package com.mirkowu.imagepicker_master;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.view.ImagePickerRecyclerView;
@@ -43,8 +44,8 @@ public class PickFragment extends Fragment implements ImagePickerRecyclerView.On
         mRecyclerViewPicker.setOnImagePickEventListener(this);
 
         List<String> list = new ArrayList<>();
-        list.add("http://pic58.nipic.com/file/20150110/11284670_104043775000_2.jpg");
-        list.add("http://pic40.nipic.com/20140412/11857649_170524977000_2.jpg");
+//        list.add("http://pic58.nipic.com/file/20150110/11284670_104043775000_2.jpg");
+//        list.add("http://pic40.nipic.com/20140412/11857649_170524977000_2.jpg");
         mRecyclerViewPicker.setData(list);
         view.findViewById(R.id.btn022).setOnClickListener(this);
         view.findViewById(R.id.btn122).setOnClickListener(this);

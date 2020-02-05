@@ -7,14 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +15,15 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.mirkowu.imagepicker.R;
 import com.mirkowu.imagepicker.adapter.PreviewImageAdapter;
@@ -79,12 +80,12 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
         context.startActivity(intent);
     }
 
-    public static void startFromPick(Fragment fragment, ArrayList<String> originData, ArrayList<String> selectedData, int currentPos, int maxCount) {
+    public static void startFromPick(Fragment fragment, ArrayList<String> selectedData, int currentPos, int maxCount) {
         Intent intent = new Intent(fragment.getContext(), ImagePreviewActivity.class);
         intent.putExtra(KEY_FROM_PICK, true);
         intent.putExtra(KEY_CURRENT_POS, currentPos);
         intent.putExtra(KEY_MAX_SELECT_COUNT, maxCount);
-        intent.putStringArrayListExtra(KEY_ORIGIN_DATA, originData);
+        // intent.putStringArrayListExtra(KEY_ORIGIN_DATA, originData);
         intent.putStringArrayListExtra(KEY_SELECTED_DATA, selectedData);
         fragment.startActivityForResult(intent, REQUEST_CODE_PREVIEW);
     }
@@ -157,14 +158,18 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
     }
 
     private void initView() {
+        mFromPick = getIntent().getBooleanExtra(KEY_FROM_PICK, false);
         mMaxSelectCount = getIntent().getIntExtra(KEY_MAX_SELECT_COUNT, mMaxSelectCount);
         currentPos = getIntent().getIntExtra(KEY_CURRENT_POS, 0);
-        mOriginList = getIntent().getStringArrayListExtra(KEY_ORIGIN_DATA);
-        if (mOriginList == null) mOriginList = new ArrayList<>();
         mSelectedList = getIntent().getStringArrayListExtra(KEY_SELECTED_DATA);
         if (mSelectedList == null) mSelectedList = new ArrayList<>();
-        mFromPick = getIntent().getBooleanExtra(KEY_FROM_PICK, false);
 
+        if (mFromPick) {
+            mOriginList = ImagePickerFragment.mLoadList;
+        } else {
+            mOriginList = getIntent().getStringArrayListExtra(KEY_ORIGIN_DATA);
+        }
+        if (mOriginList == null) mOriginList = new ArrayList<>();
 
         btnCommit = findViewById(R.id.btnCommit);
         rlBottom = findViewById(R.id.rlBottom);

@@ -15,6 +15,7 @@ public interface ImageEngine {
 
     /**
      * 预览加载大图时用到的方法
+     * 必须填写
      *
      * @param context
      * @param image
@@ -24,6 +25,7 @@ public interface ImageEngine {
 
     /**
      * 加载 文件夹，图片列表等 用到的方法 可重写size
+     * 必须填写
      *
      * @param context
      * @param image
@@ -34,6 +36,7 @@ public interface ImageEngine {
 
     /**
      * 加载 已经挑选的图片 ImagePickerRecyclerView内的显示 一般和 load 相似
+     * 必须填写
      *
      * @param context
      * @param image
@@ -45,6 +48,7 @@ public interface ImageEngine {
 
     /**
      * 停止加载
+     * 可以为空
      *
      * @param context
      */
@@ -52,6 +56,7 @@ public interface ImageEngine {
 
     /**
      * 开始加载
+     * 可以为空
      *
      * @param context
      */
@@ -59,6 +64,7 @@ public interface ImageEngine {
 
     /**
      * 下载网络图片时用到的方法 没有用到可以不用管
+     * 可以为空
      *
      * @param context
      * @param url

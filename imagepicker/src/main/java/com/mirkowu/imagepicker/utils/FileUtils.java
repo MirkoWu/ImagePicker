@@ -9,10 +9,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import com.mirkowu.imagepicker.ImagePicker;
 
@@ -209,14 +210,12 @@ public class FileUtils {
         Cursor c = context.getContentResolver().query(uri, null, null, null, null);
         String filePath = null;
         if (null == c) {
-            throw new IllegalArgumentException(
-                    "Query on " + uri + " returns null result.");
+            throw new IllegalArgumentException("Query on " + uri + " returns null result.");
         }
         try {
             if ((c.getCount() != 1) || !c.moveToFirst()) {
             } else {
-                filePath = c.getString(
-                        c.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
+                filePath = c.getString(c.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
             }
         } finally {
             c.close();
@@ -282,16 +281,11 @@ public class FileUtils {
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
             @Override
             public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
-                Bitmap bitmap = ImagePicker.getInstance().getImageEngine()
+                Bitmap bitmap = ImagePicker.getInstance()
+                        .getImageEngine()
                         .loadAsBitmap(context, url);
-//                Bitmap bitmap = Glide.with(context)
-//                        .asBitmap()
-//                        .load(url)
-//                        .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-//                        .get();
 
-                if (!e.isDisposed())
-                    e.onNext(bitmap);
+                if (!e.isDisposed()) e.onNext(bitmap);
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

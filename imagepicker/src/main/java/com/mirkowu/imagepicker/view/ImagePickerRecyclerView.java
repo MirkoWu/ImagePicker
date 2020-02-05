@@ -3,17 +3,18 @@ package com.mirkowu.imagepicker.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.R;
@@ -287,7 +288,7 @@ public class ImagePickerRecyclerView extends RecyclerView {
         @Override
         public ImgViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ImgViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.ivp_list_item_image, parent, false));
+                    .inflate(R.layout.ivp_list_item_selected_image, parent, false));
         }
 
         @Override
