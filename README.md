@@ -1,4 +1,7 @@
 # ImagePicker
+[![Apache 2.0 License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Download](https://api.bintray.com/packages/mirkowu/maven/ImagePicker/images/download.svg) ](https://bintray.com/mirkowu/maven/ImagePicker/)
+
 仿微信实现多图选择。支持单选和多选两种模式
 
 
@@ -13,7 +16,7 @@
 ```java
 
 dependencies {
-    implementation 'com.mirkowu:ImagePicker:3.0.0'
+    implementation 'com.mirkowu:ImagePicker:3.0.1'
     
     //glide 版本最好一致 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -202,10 +205,12 @@ public class Glide4Loader implements ImageEngine {
 -------------------
 
 ### 更新日志
+* 2020-2-7
+    1. 更新预览界面下载图标
 * 2020-2-5
     1. 修复因传送数据过大导致预览时闪退的Bug
     2. 升级到Androidx版本
-    2. 升级Gradle到4.6
+    3. 升级Gradle到4.6
 * 2018-5-24
     1. 更新Glide到4.7.1
     2. 升级Gradle到4.4

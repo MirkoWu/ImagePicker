@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
     private ViewPagerFixed mViewPager;
     private PreviewImageAdapter adapter;
     private RelativeLayout rlBottom;
+    private LinearLayout llSave;
     private TextView tvPick;
     private Button btnCommit;
     private int currentPos;
@@ -117,12 +120,13 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
         }
 
         mViewPager = (ViewPagerFixed) findViewById(R.id.mViewPager);
-        TextView tv_save = (TextView) findViewById(R.id.tv_save);
+        llSave = (LinearLayout) findViewById(R.id.llSave);
+        ImageView ivSave = (ImageView) findViewById(R.id.ivSave);
 
         savePath = getIntent().getStringExtra(KEY_SAVE_PATH);
         if (!TextUtils.isEmpty(savePath)) {
-            tv_save.setVisibility(View.VISIBLE);
-            tv_save.setOnClickListener(this);
+            llSave.setVisibility(View.VISIBLE);
+            ivSave.setOnClickListener(this);
         }
 
 
@@ -227,7 +231,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.tv_save) {//保存图片
+        if (id == R.id.ivSave) {//保存图片
             final File saveFile = new File(savePath);
             FileUtils.save2SDCard(ImagePreviewActivity.this, mOriginList.get(currentPos))
                     .subscribe(new Consumer<Bitmap>() {
@@ -322,6 +326,11 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
             ViewCompat.setAlpha(rlBottom, 0);
             ViewCompat.animate(rlBottom).alpha(1).setInterpolator(new DecelerateInterpolator(2)).start();
         }
+        if (!TextUtils.isEmpty(savePath) && llSave != null) {
+            llSave.setVisibility(View.VISIBLE);
+            ViewCompat.setAlpha(llSave, 0);
+            ViewCompat.animate(llSave).alpha(1).setInterpolator(new DecelerateInterpolator(2)).start();
+        }
     }
 
     private void hiddenToolbar() {
@@ -337,6 +346,9 @@ public class ImagePreviewActivity extends AppCompatActivity implements OnPageCha
         }
         if (mFromPick && rlBottom != null) {
             ViewCompat.animate(rlBottom).alpha(0).setInterpolator(new DecelerateInterpolator(2)).start();
+        }
+        if (!TextUtils.isEmpty(savePath) && llSave != null) {
+            ViewCompat.animate(llSave).alpha(0).setInterpolator(new DecelerateInterpolator(2)).start();
         }
     }
 

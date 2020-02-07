@@ -1,4 +1,7 @@
 # ImagePIcker
+[![Apache 2.0 License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Download](https://api.bintray.com/packages/mirkowu/maven/ImagePicker/images/download.svg) ](https://bintray.com/mirkowu/maven/ImagePicker/)
+
 Image selector for Android device. Support single choice and multi-choice.
 
 
@@ -13,7 +16,7 @@ Add module `ImagePicker` as your dependence. in your `build.gradle` :
 ```java
 
 dependencies {
-   implementation 'com.mirkowu:ImagePicker:3.0.0'
+   implementation 'com.mirkowu:ImagePicker:3.0.1'
    
     ////glide version need same 
    implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -200,6 +203,8 @@ public class Glide4Loader implements ImageEngine {
 -------------------
 
 ### Change Log
+* 2020-2-7
+    1. Update PreView Activity UI
 * 2020-2-5
     1. Fixed large data cause crash bug
     2. Move to Androidx version
