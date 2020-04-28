@@ -16,7 +16,7 @@ Add module `ImagePicker` as your dependence. in your `build.gradle` :
 ```java
 
 dependencies {
-   implementation 'com.mirkowu:ImagePicker:3.0.1'
+   implementation 'com.mirkowu:ImagePicker:3.0.2'
    
     ////glide version need same 
    implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -203,6 +203,8 @@ public class Glide4Loader implements ImageEngine {
 -------------------
 
 ### Change Log
+* 2020-4-28
+    1. v3.0.2 Add Support GIF Image Pick
 * 2020-2-7
     1. Update PreView Activity UI
 * 2020-2-5

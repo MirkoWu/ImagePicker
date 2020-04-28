@@ -2,7 +2,8 @@
 
 buildscript {
     repositories {
-        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://nexus.umlife.net/nexus/content/repositories/ycenter' }
         google()
         jcenter()
     }
@@ -16,7 +17,8 @@ buildscript {
 
 allprojects {
     repositories {
-        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://nexus.umlife.net/nexus/content/repositories/ycenter' }
         google()
         jcenter()
         maven { url "https://jitpack.io" }

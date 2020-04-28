@@ -12,6 +12,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import com.mirkowu.imagepicker.ImagePicker;
 import com.mirkowu.imagepicker.R;
 import com.mirkowu.imagepicker.bean.Folder;
 import com.mirkowu.imagepicker.bean.MediaBean;
@@ -43,9 +44,11 @@ public class MediaCollectionLoader implements LoaderManager.LoaderCallbacks<Curs
     private final String where
             = MediaStore.Video.Media.MIME_TYPE + "=? or "
             + MediaStore.Video.Media.MIME_TYPE + "=? or "
+            + MediaStore.Video.Media.MIME_TYPE + "=? or "
             + MediaStore.Video.Media.MIME_TYPE + "=?";
 
     private final String[] whereArgs = {"image/png", "image/jpg", "image/jpeg"};
+    private final String[] whereArgsWithGif = {"image/png", "image/jpg", "image/jpeg", "image/gif"};
 
     // folder result data set
     private boolean hasFolderGened;//文件夹是否已遍历 生成过
@@ -53,6 +56,7 @@ public class MediaCollectionLoader implements LoaderManager.LoaderCallbacks<Curs
     private ArrayList<Folder> mResultFolder;//文件夹列表
 
     private Context mContext;
+    private String[] mSupportMineType;
     private CollectionLoaderCallback mCallback;
 
 
@@ -60,6 +64,7 @@ public class MediaCollectionLoader implements LoaderManager.LoaderCallbacks<Curs
         this.mContext = context;
         this.mCallback = callback;
         mResultFolder = new ArrayList<>();
+        mSupportMineType = ImagePicker.getInstance().isSupportGif() ? whereArgsWithGif : whereArgs;
     }
 
 
@@ -71,7 +76,7 @@ public class MediaCollectionLoader implements LoaderManager.LoaderCallbacks<Curs
             cursorLoader = new CursorLoader(mContext,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
                     IMAGE_PROJECTION[4] + ">0 AND " + where,
-                    whereArgs, IMAGE_PROJECTION[2] + " DESC");
+                    mSupportMineType, IMAGE_PROJECTION[2] + " DESC");
         } else if (id == LOADER_CATEGORY) {//加载分类文件夹
             cursorLoader = new CursorLoader(mContext,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,

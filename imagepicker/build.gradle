@@ -36,7 +36,7 @@ publish {
     userOrg = 'mirkowu'
     groupId = 'com.mirkowu'
     artifactId = 'ImagePicker'
-    publishVersion = '3.0.1'
+    publishVersion = '3.0.2'
     desc = 'a library of pick image '
     website = "https://github.com/mirkowu/${rootProject.name}"
 }

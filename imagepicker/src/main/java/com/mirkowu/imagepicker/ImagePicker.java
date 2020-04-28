@@ -33,6 +33,7 @@ public class ImagePicker {
     public static final String EXTRA_RESULT = ImagePickerActivity.EXTRA_RESULT;
 
     private boolean mShowCamera = true;
+    private boolean isSupportGif = true;
     private int mMaxCount = 9;
     private int mMode = ImagePickerActivity.MODE_MULTI;
     private ArrayList<String> mOriginData;
@@ -99,6 +100,15 @@ public class ImagePicker {
     public ImagePicker origin(ArrayList<String> images) {
         mOriginData = images;
         return sSelector;
+    }
+
+    public ImagePicker supportGif(boolean isSupportGif) {
+        this.isSupportGif = isSupportGif;
+        return sSelector;
+    }
+
+    public Boolean isSupportGif() {
+        return isSupportGif;
     }
 
 

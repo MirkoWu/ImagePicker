@@ -16,7 +16,7 @@
 ```java
 
 dependencies {
-    implementation 'com.mirkowu:ImagePicker:3.0.1'
+    implementation 'com.mirkowu:ImagePicker:3.0.2'
     
     //glide 版本最好一致 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -205,6 +205,8 @@ public class Glide4Loader implements ImageEngine {
 -------------------
 
 ### 更新日志
+* 2020-4-28
+    1. v3.0.2 新增支持GIF格式图片选取
 * 2020-2-7
     1. 更新预览界面下载图标
 * 2020-2-5
